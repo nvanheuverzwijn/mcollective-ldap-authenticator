@@ -1,0 +1,1 @@
+# mcollective-ldap-authenticator
