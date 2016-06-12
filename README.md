@@ -2,6 +2,11 @@
 
 This is an attempt to bring an ldap backend to mcollective authentication rpc.
 
-## Vagrant
+## Install
 
-Folder `vagrant-files` contains a box ready for developpement.
+Install everything you need for building the development box
+```
+$ make build
+$ cd vagrant-files
+$ vagrant up
+```

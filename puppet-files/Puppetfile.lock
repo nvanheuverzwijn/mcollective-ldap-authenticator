@@ -1,0 +1,29 @@
+FORGE
+  remote: https://forge.puppet.com
+  specs:
+    camptocamp-openldap (1.14.0)
+      herculesteam-augeasproviders_core (~> 2.0)
+      herculesteam-augeasproviders_shellvar (~> 2.0)
+      puppetlabs-stdlib (< 5.0.0, >= 3.2.0)
+    herculesteam-augeasproviders_core (2.1.2)
+      puppetlabs-stdlib (< 5.0.0, >= 3.2.0)
+    herculesteam-augeasproviders_shellvar (2.2.1)
+      herculesteam-augeasproviders_core (< 3.0.0, >= 2.1.0)
+    puppet-mcollective (2.2.0)
+      puppetlabs-stdlib (< 5.0.0, >= 4.2.0)
+      richardc-datacat (< 1.0.0, >= 0.6.2)
+    puppet-staging (1.0.7)
+    puppetlabs-apt (2.2.2)
+      puppetlabs-stdlib (< 5.0.0, >= 4.5.0)
+    puppetlabs-rabbitmq (5.4.0)
+      puppet-staging (< 2.0.0, >= 0.3.1)
+      puppetlabs-apt (< 3.0.0, >= 1.8.0)
+      puppetlabs-stdlib (< 5.0.0, >= 3.0.0)
+    puppetlabs-stdlib (4.12.0)
+    richardc-datacat (0.6.2)
+
+DEPENDENCIES
+  camptocamp-openldap (= 1.14.0)
+  puppet-mcollective (= 2.2.0)
+  puppetlabs-rabbitmq (= 5.4.0)
+
