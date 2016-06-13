@@ -97,7 +97,7 @@ rabbitmq_exchange { "mcollective_reply@/mcollective":
 #
 #mcollective
 #
-file { '/etc/mcollective/ssl/clients/root.crt':
+file { '/etc/mcollective/ssl/clients/root.pem':
   source => 'puppet:///modules/dev/ssl/client.crt',
   require => Class['mcollective'],
 }
