@@ -8,6 +8,6 @@ Vagrant.configure(2) do |config|
   end
   config.vm.provision "puppet" do |puppet|
     puppet.manifests_path = "../puppet-files/manifests"
-    puppet.module_path = "../puppet-files/modules"
+    puppet.module_path = ["../puppet-files/modules", "../puppet-files/lib"]
   end
 end
