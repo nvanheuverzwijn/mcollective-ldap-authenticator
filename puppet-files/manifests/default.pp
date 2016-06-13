@@ -99,7 +99,9 @@ rabbitmq_exchange { "mcollective_reply@/mcollective":
 #
 file { '/etc/mcollective/ssl/clients/root.crt':
   source => 'puppet:///modules/dev/ssl/client.crt',
+  require => Class['mcollective'],
 }
+
 class { '::mcollective': 
   client => true,
   connector => 'rabbitmq',
@@ -112,7 +114,10 @@ class { '::mcollective':
   ssl_ca_cert         => 'puppet:///modules/dev/ssl/ca.crt',
   ssl_server_public   => 'puppet:///modules/dev/ssl/server.crt',
   ssl_server_private  => 'puppet:///modules/dev/ssl/server.key',
+  core_libdir => '/usr/share/mcollective/plugins',
+  require => Class['rabbitmq'],
 }
+
 mcollective::user { 'root':
   homedir     => '/root',
   group       => 'users',
@@ -125,16 +130,19 @@ mcollective::user { 'root':
   username => 'root',
   setting  => 'plugin.rabbitmq.pool.1.user',
   value    => 'admin',
+  require  => Class['::mcollective'],
 }
 
 ::mcollective::user::setting { "root plugin.rabbitmq.pool.1.password":
   username => 'root',
   setting  => 'plugin.rabbitmq.pool.1.password',
   value    => $all_password,
+  require  => Class['::mcollective'],
 }
 
 ::mcollective::user::setting { "root plugin.rabbitmq.use_reply_exchange":
   username => 'root',
   setting  => 'plugin.rabbitmq.use_reply_exchange',
   value    => true,
+  require  => Class['::mcollective'],
 }
