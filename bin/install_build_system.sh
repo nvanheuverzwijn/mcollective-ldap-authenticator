@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/bin/bash
 
 # package manager detection
 if command -v pacman >/dev/null 2>&1; then
