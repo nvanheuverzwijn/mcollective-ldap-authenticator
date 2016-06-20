@@ -10,3 +10,7 @@ $ make build
 $ cd vagrant-files
 $ vagrant up
 ```
+
+## LDAP
+
+LDAP files are located in `ldap.schema` folder. To generate the schema, `make ldap`.
