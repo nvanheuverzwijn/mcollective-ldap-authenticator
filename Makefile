@@ -3,13 +3,10 @@ all:
 	@echo "       make clean"
 	@echo "       make ldap"
 build:
-	./bin/install_build_system.sh
-	bundle install
-	cd puppet-files && bundle exec librarian-puppet install
+	./bin/make_script/make_build.sh
 
 ldap: 
-	./bin/make_script/make_ldap_schema.sh
+	./bin/make_script/make_ldap.sh
 
 clean:
-	cd puppet-files && bundle exec librarian-puppet clean # removing puppet-files modules
-	bundle clean && rm -rf ruby # removing bundle install
+	./bin/make_script/make_clean.sh
