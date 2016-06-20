@@ -1,0 +1,41 @@
+#
+# OpenLDAP schema file for mcollective
+#
+
+attributetype ( {oid}.1.1
+    NAME 'mcollectiveAllowDeny'
+    DESC 'Allow or Deny'
+    EQUALITY caseExactIA5Match
+    SUBSTR caseExactIA5SubstringsMatch
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 )
+
+attributetype ( {oid}.1.2
+    NAME 'mcollectiveUser'
+    DESC 'User(s) who may run actions'
+    EQUALITY caseExactIA5Match
+    SUBSTR caseExactIA5SubstringsMatch
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 )
+
+attributetype ( {oid}.1.3
+    NAME 'mcollectiveAction'
+    DESC 'Action(s) to be executed by mcollective'
+    EQUALITY caseExactIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 )
+
+attributetype ( {oid}.1.4
+    NAME 'mcollectiveFact'
+    DESC 'Fact(s) a machine must satisfy for this entry to apply'
+    EQUALITY caseExactIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 )
+
+attributetype ( {oid}.1.5
+    NAME 'mcollectiveClass'
+    DESC 'Class(es) a machine must satisfy for this entry to apply'
+    EQUALITY caseExactIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 )
+
+objectclass ( {oid}.2.1 NAME 'mcollectiveRole' SUP top STRUCTURAL
+    DESC 'Mcollective Authorization Entries'
+    MUST ( cn )
+    MAY ( mcollectiveAllowDeny $ mcollectiveUser $ mcollectiveAction $ mcollectiveFact $ mcollectiveClass $ description )
+    )
