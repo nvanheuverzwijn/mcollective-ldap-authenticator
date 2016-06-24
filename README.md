@@ -14,3 +14,7 @@ $ vagrant up
 ## LDAP
 
 LDAP files are located in `ldap.schema` folder. To generate the schema, `make ldap`.
+
+## Clean
+
+To clean the environment, `make clean`.
