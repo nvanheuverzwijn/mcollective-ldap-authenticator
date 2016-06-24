@@ -1,14 +1,21 @@
 #
 # globals
 #
-$all_password = '74yr6!$hf4iur'
+$all_password = 'asdF1234'
 
 #
 # openldap
 #
 class { '::openldap::server': }
-::openldap::server::database { 'dc=foo,dc=example.com':
+::openldap::server::database { 'dc=example,dc=com':
   ensure => present,
+  rootdn    => 'cn=admin,dc=example,dc=com',
+  rootpw    => $all_password,
+}
+openldap::server::schema { 'mcollective':
+  ensure  => present,
+  path    => '/mcollective-ldap-authenticator/ldap.schema/mcollective.schema',
+#  require => Openldap::Server::Schema["inetorgperson"],
 }
 
 # rabbitmq
