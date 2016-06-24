@@ -3,6 +3,7 @@
 
 Vagrant.configure(2) do |config|
   config.vm.box = "_smk_/jessie64"
+  config.vm.synced_folder "../", "/mcollective-ldap-authenticator"
   config.vm.provider "virtualbox" do |vb|
     vb.memory = "1024"
   end
