@@ -12,10 +12,15 @@ class { '::openldap::server': }
   rootdn    => 'cn=admin,dc=example,dc=com',
   rootpw    => $all_password,
 }
-openldap::server::schema { 'mcollective':
-  ensure  => present,
-  path    => '/mcollective-ldap-authenticator/ldap.schema/mcollective.schema',
-#  require => Openldap::Server::Schema["inetorgperson"],
+
+if str2bool($::mcollective_schema_present){
+  openldap::server::schema { 'mcollective':
+    ensure  => present,
+    path    => '/mcollective-ldap-authenticator/ldap.schema/mcollective.schema',
+  }
+}
+else{
+  warning('The file "/mcollective-ldap-authenticator/ldap.schema/mcollective.schema" does not exists. Either the share /mcollective-ldap-authenticator was not mounted properly or you need to run the appropriate make command.')
 }
 
 # rabbitmq
