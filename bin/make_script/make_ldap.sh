@@ -2,8 +2,8 @@
 
 cd ldap.schema
 
-TEMPLATE=mcollective.schema.template
-TARGET=mcollective.schema
+TEMPLATE=action-policy.schema.template
+TARGET=action-policy.schema
 
 #
 # Replacement variable

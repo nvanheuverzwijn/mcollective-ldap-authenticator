@@ -16,11 +16,11 @@ class { '::openldap::server': }
 if str2bool($::mcollective_schema_present){
   openldap::server::schema { 'mcollective':
     ensure  => present,
-    path    => '/mcollective-ldap-authenticator/ldap.schema/mcollective.schema',
+    path    => '/mcollective-ldap-authenticator/ldap.schema/action-policy.schema',
   }
 }
 else{
-  warning('The file "/mcollective-ldap-authenticator/ldap.schema/mcollective.schema" does not exists. Either the share /mcollective-ldap-authenticator was not mounted properly or you need to run the appropriate make command.')
+  warning('The file "/mcollective-ldap-authenticator/ldap.schema/action-policy.schema" does not exists. Either the share /mcollective-ldap-authenticator was not mounted properly or you need to run the appropriate make command.')
 }
 
 # rabbitmq
