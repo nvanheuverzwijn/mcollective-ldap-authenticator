@@ -23,6 +23,11 @@ else{
   warning('The file "/mcollective-ldap-authenticator/ldap.schema/action-policy.schema" does not exists. Either the share /mcollective-ldap-authenticator was not mounted properly or you need to run the appropriate make command.')
 }
 
+package { 'net-ldap':
+  ensure   => 'present',
+  provider => 'gem',
+}
+
 # rabbitmq
 file { '/etc/ssl/certs/ca.crt':
   source => 'puppet:///modules/dev/ssl/ca.crt',
