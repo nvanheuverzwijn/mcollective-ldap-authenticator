@@ -9,17 +9,12 @@ ou: actionpolicy
 dn: cn=root,ou=actionpolicy,ou=mcollective,dc=example,dc=com
 objectClass: mcollectiveRole
 cn: root
-mcollectiveAllowDeny: allow
-mcollectiveUser: cert=root
-mcollectiveAction: package
-mcollectiveFact: *
-mcollectiveClass: *
-
-dn: cn=vagrant,ou=actionpolicy,ou=mcollective,dc=example,dc=com
-objectClass: mcollectiveRole
-cn: vagrant
-mcollectiveAllowDeny: allow
-mcollectiveUser: cert=vagrant
-mcollectiveAction: package
+mcollectiveAllow: TRUE
+mcollectiveAgent: service
+mcollectiveCaller: cert=root
+mcollectiveAction: status
+mcollectiveAction: restart
+mcollectiveAction: start
+mcollectiveAction: stop
 mcollectiveFact: *
 mcollectiveClass: *

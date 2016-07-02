@@ -27,7 +27,6 @@ module MCollective
         # A policy file exists
         Log.debug('Parsing ldap policy for %s' % [@agent])
         allow = @allow_unconfigured
-        File.write('/tmp/tmp', @username)
         ldap = Net::LDAP.new :host => @host,
           :port => @port,
           :auth => {
@@ -46,11 +45,11 @@ module MCollective
         filter = Net::LDAP::Filter.eq( "cn", "*" )
         ldap.search( :base => @treebase, :filter => filter, :return_result => false ) do |entry|
           allow = false
-          line = entry.mcollectiveallowdeny[0] + "\t" +
-                 entry.mcollectiveuser[0] + "\t" +
-                 entry.mcollectiveaction[0] + "\t" +
-                 entry.mcollectivefact[0] + "\t" +
-                 entry.mcollectiveclass[0]
+          line = entry.mcollectiveallow[0] == 'TRUE' ? 'allow' : 'deny' + "\t" +
+                 entry.mcollectivecaller.join(" ") + "\t" +
+                 entry.mcollectiveaction.join(" ") + "\t" +
+                 entry.mcollectivefact.join(" ") + "\t" +
+                 entry.mcollectiveclass.join(" ")
           if line =~ /^(allow|deny)\t+(.+?)\t+(.+?)\t+(.+?)(\t+(.+?))*$/
             if check_policy($2, $3, $4, $6)
               if $1 == 'allow'
