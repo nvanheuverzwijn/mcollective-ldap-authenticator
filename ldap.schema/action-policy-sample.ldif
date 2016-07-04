@@ -10,11 +10,9 @@ dn: cn=root,ou=actionpolicy,ou=mcollective,dc=example,dc=com
 objectClass: mcollectiveRole
 cn: root
 mcollectiveAllow: TRUE
-mcollectiveAgent: service
+mcollectiveAgent: rpcutil
 mcollectiveCaller: cert=root
-mcollectiveAction: status
-mcollectiveAction: restart
-mcollectiveAction: start
-mcollectiveAction: stop
+mcollectiveAction: get_fact
+mcollectiveAction: agent_inventory
 mcollectiveFact: *
 mcollectiveClass: *
