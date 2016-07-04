@@ -45,8 +45,15 @@ attributetype ( {oid}.1.6
     SYNTAX 1.3.6.1.4.1.1466.115.121.1.26
     SINGLE-VALUE )
 
+attributetype ( {oid}.1.7
+    NAME 'mcollectiveHost'
+    DESC 'Host(s) for which this policy is applied to'
+    EQUALITY caseExactIA5Match
+    SUBSTR caseExactIA5SubstringsMatch
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 )
+
 objectclass ( {oid}.2.1 NAME 'mcollectiveRole' SUP top STRUCTURAL
     DESC 'Mcollective Authorization Entries'
     MUST ( cn $ mcollectiveAllow $ mcollectiveAgent )
-    MAY ( mcollectiveCaller $ mcollectiveAction $ mcollectiveFact $ mcollectiveClass $ description)
+    MAY ( mcollectiveCaller $ mcollectiveAction $ mcollectiveFact $ mcollectiveClass $ mcollectiveHost $ description)
     )
