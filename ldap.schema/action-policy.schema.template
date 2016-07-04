@@ -47,6 +47,6 @@ attributetype ( {oid}.1.6
 
 objectclass ( {oid}.2.1 NAME 'mcollectiveRole' SUP top STRUCTURAL
     DESC 'Mcollective Authorization Entries'
-    MUST ( cn )
-    MAY ( mcollectiveAllow $ mcollectiveCaller $ mcollectiveAction $ mcollectiveFact $ mcollectiveClass $ mcollectiveAgent $ description)
+    MUST ( cn $ mcollectiveAllow $ mcollectiveAgent )
+    MAY ( mcollectiveCaller $ mcollectiveAction $ mcollectiveFact $ mcollectiveClass $ description)
     )
