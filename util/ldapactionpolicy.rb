@@ -42,7 +42,7 @@ module MCollective
         end
 
         # Maybe filter diretly with the @caller variable ?
-        filter = Net::LDAP::Filter.eq( "cn", "*" )
+        filter = Net::LDAP::Filter.eq( "mcollectiveAgent", @agent )
         ldap.search( :base => @treebase, :filter => filter, :return_result => false ) do |entry|
           allow = false
           line = entry.mcollectiveallow[0] == 'TRUE' ? 'allow' : 'deny' + "\t" +
