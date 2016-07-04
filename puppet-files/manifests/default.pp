@@ -164,27 +164,27 @@ mcollective::user { 'root':
   require  => Class['::mcollective'],
 }
 
-mcollective::common::setting { 'plugin.ldapactionpolicy.allow_unconfigured':
+mcollective::server::setting { 'plugin.ldapactionpolicy.allow_unconfigured':
   setting => 'plugin.ldapactionpolicy.allow_unconfigured',
   value   => 0,
 }
-mcollective::common::setting { 'plugin.ldapactionpolicy.treebase':
+mcollective::server::setting { 'plugin.ldapactionpolicy.treebase':
   setting => 'plugin.ldapactionpolicy.treebase',
   value   => 'ou=actionpolicy,ou=mcollective,dc=example,dc=com',
 }
-mcollective::common::setting { 'plugin.ldapactionpolicy.host':
+mcollective::server::setting { 'plugin.ldapactionpolicy.host':
   setting => 'plugin.ldapactionpolicy.host',
   value   => '127.0.0.1',
 }
-mcollective::common::setting { 'plugin.ldapactionpolicy.port':
+mcollective::server::setting { 'plugin.ldapactionpolicy.port':
   setting => 'plugin.ldapactionpolicy.port',
   value   => 389,
 }
-mcollective::common::setting { 'plugin.ldapactionpolicy.username':
+mcollective::server::setting { 'plugin.ldapactionpolicy.username':
   setting => 'plugin.ldapactionpolicy.username',
   value   => 'cn=admin,dc=example,dc=com',
 }
-mcollective::common::setting { 'plugin.ldapactionpolicy.password':
+mcollective::server::setting { 'plugin.ldapactionpolicy.password':
   setting => 'plugin.ldapactionpolicy.password',
   value   => "${all_password}",
 }
