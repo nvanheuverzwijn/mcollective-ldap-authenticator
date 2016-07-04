@@ -45,11 +45,12 @@ module MCollective
         filter = Net::LDAP::Filter.eq( "mcollectiveAgent", @agent )
         ldap.search( :base => @treebase, :filter => filter, :return_result => false ) do |entry|
           allow = false
-          line = entry.mcollectiveallow[0] == 'TRUE' ? 'allow' : 'deny' + "\t" +
+          line = ( entry.mcollectiveallow[0] == 'TRUE' ? 'allow' : 'deny' ) + "\t" +
                  entry.mcollectivecaller.join(" ") + "\t" +
                  entry.mcollectiveaction.join(" ") + "\t" +
                  entry.mcollectivefact.join(" ") + "\t" +
                  entry.mcollectiveclass.join(" ")
+          Log.debug("Generated line '%s'" % line)
           if line =~ /^(allow|deny)\t+(.+?)\t+(.+?)\t+(.+?)(\t+(.+?))*$/
             if check_policy($2, $3, $4, $6)
               if $1 == 'allow'
