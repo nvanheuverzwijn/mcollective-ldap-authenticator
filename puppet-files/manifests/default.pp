@@ -188,3 +188,17 @@ mcollective::server::setting { 'plugin.ldapactionpolicy.password':
   setting => 'plugin.ldapactionpolicy.password',
   value   => "${all_password}",
 }
+mcollective::server::setting { 'override rpcauthprovider':
+  setting => 'rpcauthprovider',
+  value   => 'ldap_action_policy',
+  order   => '50',
+}
+
+file { '/usr/local/share/mcollective/mcollective/util/ldapactionpolicy.rb':
+  ensure => 'link',
+  target => '/mcollective-ldap-authenticator/util/ldapactionpolicy.rb',
+}
+file { '/usr/local/share/mcollective/mcollective/util/ldapactionpolicy.ddl':
+  ensure => 'link',
+  target => '/mcollective-ldap-authenticator/util/ldapactionpolicy.ddl',
+}
