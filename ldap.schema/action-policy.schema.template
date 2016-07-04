@@ -39,7 +39,7 @@ attributetype ( {oid}.1.5
 
 attributetype ( {oid}.1.6
     NAME 'mcollectiveAgent'
-    DESC 'Agent(s) for which this policy is applied to'
+    DESC 'Agent for which this policy is applied to'
     EQUALITY caseExactIA5Match
     SUBSTR caseExactIA5SubstringsMatch
     SYNTAX 1.3.6.1.4.1.1466.115.121.1.26
