@@ -42,25 +42,36 @@ module MCollective
         end
 
         # Maybe filter diretly with the @caller variable ?
-        filter = Net::LDAP::Filter.eq( "mcollectiveAgent", @agent )
-        ldap.search( :base => @treebase, :filter => filter, :return_result => false ) do |entry|
-          allow = false
-          line = ( entry.mcollectiveallow[0] == 'TRUE' ? 'allow' : 'deny' ) + "\t" +
-                 entry.mcollectivecaller.join(" ") + "\t" +
-                 entry.mcollectiveaction.join(" ") + "\t" +
-                 entry.mcollectivefact.join(" ") + "\t" +
-                 entry.mcollectiveclass.join(" ")
-          Log.debug("Generated line '%s'" % line)
-          if line =~ /^(allow|deny)\t+(.+?)\t+(.+?)\t+(.+?)(\t+(.+?))*$/
-            if check_policy($2, $3, $4, $6)
-              if $1 == 'allow'
+        filter_caller      = Net::LDAP::Filter.eq("mcollectiveCaller", @caller)  
+        filter_caller_star = Net::LDAP::Filter.eq("mcollectiveCaller", "*")
+
+        filter_agent      = Net::LDAP::Filter.eq("mcollectiveAgent", @agent)
+        filter_agent_star = Net::LDAP::Filter.eq("mcollectiveAgent", "*")
+
+        filter_action      = Net::LDAP::Filter.eq("mcollectiveAction", @action)
+        filter_action_star = Net::LDAP::Filter.eq("mcollectiveAction", "*")
+
+        filters = [
+          filter_agent & filter_caller & filter_action,
+          filter_agent & filter_caller & filter_action_star,
+          filter_agent & filter_caller_star & filter_action,
+          filter_agent & filter_caller_star & filter_action_star,
+          filter_agent_star & filter_caller & filter_action_star,
+          filter_agent_star & filter_caller_star & filter_action_star
+        ]
+        
+        filters.each do |filter|
+          ldap.search( :base => @treebase, :filter => filter, :return_result => false ) do |entry|
+            allow = false
+            puts entry.inspect
+#            Log.debug("Generated line '%s'" % line)
+            if check_policy(entry.mcollectivefact.join(" "), entry.mcollectiveclass.join(" "))
+              if entry.mcollectiveallow[0] == 'TRUE'
                 return true
               else
-                deny("Denying based on explicit 'deny' policy rule in ldap: %s" % line)
+                deny("Denying based on explicit 'deny' policy rule in ldap")
               end
             end
-          else
-            Log.warn("Cannot parse ldap policy line: %s" % line)
           end
         end
 
@@ -68,19 +79,7 @@ module MCollective
       end
 
       # Check if a request made by a caller matches the state defined in the policy
-      def check_policy(rpccaller, actions, facts, classes)
-        # If we have a wildcard caller or the caller matches our policy line
-        # then continue else skip this policy line\
-        if (rpccaller != '*') && (! rpccaller || ! rpccaller.split.include?(@caller))
-          return false
-        end
-
-        # If we have a wildcard actions list or the request action is in the list
-        # of actions in the policy line continue, else skip this policy line
-        if (actions != '*') && !(actions.split.include?(@action))
-          return false
-        end
-
+      def check_policy(facts, classes)
         unless classes
           return parse_compound(facts)
         else
