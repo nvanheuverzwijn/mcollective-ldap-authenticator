@@ -1,4 +1,6 @@
-all:
+all: build ldap vagrant test
+
+help:
 	@echo "usage: make build"
 	@echo "       make clean"
 	@echo "       make ldap"
