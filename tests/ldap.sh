@@ -99,4 +99,31 @@ fi
 tac ./fixture/disallow-star-star-star.ldif | grep dn | cut -f 2 -d " " | xargs -I{} /usr/bin/ldapdelete -x -D 'cn=admin,dc=example,dc=com' -w asdF1234 {}
 
 
+
+/usr/bin/ldapadd -x -D 'cn=admin,dc=example,dc=com' -w asdF1234 -f ./fixture/allow-root-rpcutil-.ldif > /dev/null
+echo 'TEST: action policy without action entry behave like action=* >allow cert=root rpcutil --< should be allowed'
+mco rpc rpcutil get_fact fact=os > /dev/null 2>&1
+if [ $? -ne 0 ]; then
+  echo 'FAIL'
+  RC=1
+else
+  echo 'SUCCESS'
+fi
+tac ./fixture/allow-root-rpcutil-.ldif | grep dn | cut -f 2 -d " " | xargs -I{} /usr/bin/ldapdelete -x -D 'cn=admin,dc=example,dc=com' -w asdF1234 {}
+
+
+
+/usr/bin/ldapadd -x -D 'cn=admin,dc=example,dc=com' -w asdF1234 -f ./fixture/allow--rpcutil-get_fact.ldif > /dev/null
+echo 'TEST: action policy without caller entry behave like caller=* >allow -- rpcutil get_fact< should be allowed'
+mco rpc rpcutil get_fact fact=os > /dev/null 2>&1
+if [ $? -ne 0 ]; then
+  echo 'FAIL'
+  RC=1
+else
+  echo 'SUCCESS'
+fi
+tac ./fixture/allow--rpcutil-get_fact.ldif | grep dn | cut -f 2 -d " " | xargs -I{} /usr/bin/ldapdelete -x -D 'cn=admin,dc=example,dc=com' -w asdF1234 {}
+
+
+
 exit $RC

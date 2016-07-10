@@ -43,13 +43,13 @@ module MCollective
 
         # Maybe filter diretly with the @caller variable ?
         filter_caller      = Net::LDAP::Filter.eq("mcollectiveCaller", @caller)  
-        filter_caller_star = Net::LDAP::Filter.eq("mcollectiveCaller", "*")
+        filter_caller_star = Net::LDAP::Filter.eq("mcollectiveCaller", "*") | ~ Net::LDAP::Filter.pres("mcollectiveCaller")
 
         filter_agent      = Net::LDAP::Filter.eq("mcollectiveAgent", @agent)
         filter_agent_star = Net::LDAP::Filter.eq("mcollectiveAgent", "*")
 
         filter_action      = Net::LDAP::Filter.eq("mcollectiveAction", @action)
-        filter_action_star = Net::LDAP::Filter.eq("mcollectiveAction", "*")
+        filter_action_star = Net::LDAP::Filter.eq("mcollectiveAction", "*") | ~ Net::LDAP::Filter.pres("mcollectiveAction")
 
         filters = [
           filter_agent & filter_caller & filter_action,
@@ -63,8 +63,7 @@ module MCollective
         filters.each do |filter|
           ldap.search( :base => @treebase, :filter => filter, :return_result => false ) do |entry|
             allow = false
-            puts entry.inspect
-#            Log.debug("Generated line '%s'" % line)
+            Log.debug("LDAP entry '%s'" % entry.inspect)
             if check_policy(entry.mcollectivefact.join(" "), entry.mcollectiveclass.join(" "))
               if entry.mcollectiveallow[0] == 'TRUE'
                 return true
