@@ -64,7 +64,8 @@ module MCollective
           ldap.search( :base => @treebase, :filter => filter, :return_result => false ) do |entry|
             allow = false
             Log.debug("LDAP entry '%s'" % entry.inspect)
-            if check_policy(entry.mcollectivefact.join(" "), entry.mcollectiveclass.join(" "))
+            facts = entry.respond_to?(:mcollectivefact) ? entry.mcollectivefact.join("") : '*'
+            if check_policy(facts, entry.mcollectiveclass.join(" "))
               if entry.mcollectiveallow[0] == 'TRUE'
                 return true
               else

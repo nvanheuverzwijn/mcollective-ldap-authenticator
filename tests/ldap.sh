@@ -126,4 +126,16 @@ tac ./fixture/allow--rpcutil-get_fact.ldif | grep dn | cut -f 2 -d " " | xargs -
 
 
 
+/usr/bin/ldapadd -x -D 'cn=admin,dc=example,dc=com' -w asdF1234 -f ./fixture/allow-root-rpcutil-get_fact-nofact.ldif > /dev/null
+echo 'TEST: action policy without fact entry behave like fact=* >allow root rpcutil get_fact< should be allowed'
+mco rpc rpcutil get_fact fact=os > /dev/null 2>&1
+if [ $? -ne 0 ]; then
+  echo 'FAIL'
+  RC=1
+else
+  echo 'SUCCESS'
+fi
+tac ./fixture/allow-root-rpcutil-get_fact-nofact.ldif | grep dn | cut -f 2 -d " " | xargs -I{} /usr/bin/ldapdelete -x -D 'cn=admin,dc=example,dc=com' -w asdF1234 {}
+
+
 exit $RC
