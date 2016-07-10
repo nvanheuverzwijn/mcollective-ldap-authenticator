@@ -65,7 +65,8 @@ module MCollective
             allow = false
             Log.debug("LDAP entry '%s'" % entry.inspect)
             facts = entry.respond_to?(:mcollectivefact) ? entry.mcollectivefact.join("") : '*'
-            if check_policy(facts, entry.mcollectiveclass.join(" "))
+            classes = entry.respond_to?(:mcollectiveclass) ? entry.mcollectiveclass.join("") : '*'
+            if check_policy(facts, classes)
               if entry.mcollectiveallow[0] == 'TRUE'
                 return true
               else

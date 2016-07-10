@@ -1,0 +1,16 @@
+dn: ou=mcollective,dc=example,dc=com
+objectClass: organizationalunit
+ou: mcollective
+
+dn: ou=actionpolicy,ou=mcollective,dc=example,dc=com
+objectClass: organizationalunit
+ou: actionpolicy
+
+dn: cn=root,ou=actionpolicy,ou=mcollective,dc=example,dc=com
+objectClass: mcollectiveRole
+cn: root
+mcollectiveAllow: TRUE
+mcollectiveAgent: rpcutil
+mcollectiveCaller: cert=root
+mcollectiveAction: get_fact
+mcollectiveFact: *
