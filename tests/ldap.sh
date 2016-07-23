@@ -150,4 +150,16 @@ fi
 tac ./fixture/allow-root-rpcutil-get_fact-noclass.ldif | grep dn | cut -f 2 -d " " | xargs -I{} /usr/bin/ldapdelete -x -D 'cn=admin,dc=example,dc=com' -w asdF1234 {}
 
 
+/usr/bin/ldapadd -x -D 'cn=admin,dc=example,dc=com' -w asdF1234 -f ./fixture/disallow-root-rpcutil-get_fact-by-host.ldif > /dev/null
+echo 'TEST: action policy disallow ip range of host >disallow root rpcutil get_fact 10.0.0.0/8< should not be allowed'
+mco rpc rpcutil get_fact fact=os > /dev/null 2>&1
+if [ $? -ne 0 ]; then
+  echo 'SUCCESS'
+else
+  echo 'FAIL'
+  RC=1
+fi
+tac ./fixture/allow-root-rpcutil-get_fact-noclass.ldif | grep dn | cut -f 2 -d " " | xargs -I{} /usr/bin/ldapdelete -x -D 'cn=admin,dc=example,dc=com' -w asdF1234 {}
+
+
 exit $RC

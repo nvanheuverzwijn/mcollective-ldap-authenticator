@@ -64,12 +64,14 @@ module MCollective
           ldap.search( :base => @treebase, :filter => filter, :return_result => false ) do |entry|
             allow = false
             Log.debug("LDAP entry '%s'" % entry.inspect)
+            hosts = entry.respond_to?(:mcollectivehost) ? entry.mcollectivehost.join("") : '*'
             facts = entry.respond_to?(:mcollectivefact) ? entry.mcollectivefact.join("") : '*'
             classes = entry.respond_to?(:mcollectiveclass) ? entry.mcollectiveclass.join("") : '*'
-            if check_policy(facts, classes)
+            if check_policy(hosts, facts, classes)
               if entry.mcollectiveallow[0] == 'TRUE'
-                return true
+                allow = true
               else
+                allow = false
                 deny("Denying based on explicit 'deny' policy rule in ldap")
               end
             end
@@ -80,12 +82,30 @@ module MCollective
       end
 
       # Check if a request made by a caller matches the state defined in the policy
-      def check_policy(facts, classes)
-        unless classes
+      def check_policy(hosts, facts, classes)
+        if hosts and not parse_hosts(hosts)
+          return false
+        end
+        if not classes
           return parse_compound(facts)
         else
           return parse_facts(facts) && parse_classes(classes)
         end
+      end
+
+      def parse_hosts(hosts)
+        return true if hosts == '*'
+
+        hosts.split.each do |host|
+          require "ipaddr"
+          require "socket"
+          mask = IPAddr.new(host)
+          Socket.ip_address_list.each do |addr_info|
+            return true if mask === addr_info.ip_address
+          end
+        end
+
+        false
       end
 
       def parse_facts(facts)
