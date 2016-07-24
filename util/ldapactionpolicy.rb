@@ -42,43 +42,30 @@ module MCollective
         end
 
         # Maybe filter diretly with the @caller variable ?
-        filter_caller      = Net::LDAP::Filter.eq("mcollectiveCaller", @caller)  
-        filter_caller_star = Net::LDAP::Filter.eq("mcollectiveCaller", "*") | ~ Net::LDAP::Filter.pres("mcollectiveCaller")
+        filter_caller = Net::LDAP::Filter.eq("mcollectiveCaller", @caller) | (Net::LDAP::Filter.eq("mcollectiveCaller", "*") | ~ Net::LDAP::Filter.pres("mcollectiveCaller"))
+        filter_agent  = Net::LDAP::Filter.eq("mcollectiveAgent", @agent) | Net::LDAP::Filter.eq("mcollectiveAgent", "*")
+        filter_action = Net::LDAP::Filter.eq("mcollectiveAction", @action) | (Net::LDAP::Filter.eq("mcollectiveAction", "*") | ~ Net::LDAP::Filter.pres("mcollectiveAction"))
 
-        filter_agent      = Net::LDAP::Filter.eq("mcollectiveAgent", @agent)
-        filter_agent_star = Net::LDAP::Filter.eq("mcollectiveAgent", "*")
-
-        filter_action      = Net::LDAP::Filter.eq("mcollectiveAction", @action)
-        filter_action_star = Net::LDAP::Filter.eq("mcollectiveAction", "*") | ~ Net::LDAP::Filter.pres("mcollectiveAction")
-
-        filters = [
-          filter_agent & filter_caller & filter_action,
-          filter_agent & filter_caller & filter_action_star,
-          filter_agent & filter_caller_star & filter_action,
-          filter_agent & filter_caller_star & filter_action_star,
-          filter_agent_star & filter_caller & filter_action_star,
-          filter_agent_star & filter_caller_star & filter_action_star
-        ]
-        
-        filters.each do |filter|
-          ldap.search( :base => @treebase, :filter => filter, :return_result => false ) do |entry|
-            allow = false
-            Log.debug("LDAP entry '%s'" % entry.inspect)
-            hosts = entry.respond_to?(:mcollectivehost) ? entry.mcollectivehost.join("") : '*'
-            facts = entry.respond_to?(:mcollectivefact) ? entry.mcollectivefact.join("") : '*'
-            classes = entry.respond_to?(:mcollectiveclass) ? entry.mcollectiveclass.join("") : '*'
-            if check_policy(hosts, facts, classes)
-              if entry.mcollectiveallow[0] == 'TRUE'
-                allow = true
-              else
-                allow = false
-                deny("Denying based on explicit 'deny' policy rule in ldap")
-              end
-            end
+        filter = filter_agent & filter_caller & filter_action
+        last_order = -1
+        got_result = false
+        ldap.search( :base => @treebase, :filter => filter, :return_result => false ) do |entry|
+          got_result = true
+          Log.debug("LDAP entry '%s'" % entry.inspect)
+          order = entry.respond_to?(:mcollectiveorder) ? entry.mcollectiveorder.join("").to_i : 0
+          next if order < last_order
+          hosts = entry.respond_to?(:mcollectivehost) ? entry.mcollectivehost.join("") : '*'
+          facts = entry.respond_to?(:mcollectivefact) ? entry.mcollectivefact.join("") : '*'
+          classes = entry.respond_to?(:mcollectiveclass) ? entry.mcollectiveclass.join("") : '*'
+          if check_policy(hosts, facts, classes)
+            allow = entry.mcollectiveallow[0] == 'TRUE'
           end
+          last_order = order
         end
-
-        allow || deny("Denying based on default ldap policy")
+        if not got_result
+          allow || deny("Denying based on default ldap policy")
+        end
+        allow || deny("Denying based on explicit 'deny' policy rule in ldap")
       end
 
       # Check if a request made by a caller matches the state defined in the policy
