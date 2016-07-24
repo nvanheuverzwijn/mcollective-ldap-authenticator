@@ -1,6 +1,6 @@
 # mcollective-ldap-authenticator
 
-This is an attempt to bring an ldap backend to mcollective authentication rpc.
+This is an attempt to implement the [mcollective action policy project](https://github.com/puppetlabs/mcollective-actionpolicy-auth) to an ldap backend.
 
 ## Install
 
@@ -14,6 +14,44 @@ $ vagrant up
 ## LDAP
 
 LDAP files are located in `ldap.schema` folder. To generate the schema, `make ldap`.
+
+### Mcollective LDAP containers
+
+The mcollective configuration is contained into the `treebase` plugin configuration.
+
+The equivalent of an action policy entry is a mcollectiveRole. It consist of the following attributes.
+
+#### mcollectiveAllow
+
+A boolean value indicating if this entry allows (`TRUE`) the access or denies (`FALSE`) it. There can only be one of this value per entry.
+
+#### mcollectiveCaller
+
+A list callerID as defined by the [mcollective action policy documentation](https://github.com/puppetlabs/mcollective-actionpolicy-auth#caller-id).
+
+#### mcollectiveAction
+
+A list of action that a mcollective agent offers.
+
+#### mcollectiveFact
+
+A list of fact consisting of either `fact=value` or a [compound value](https://docs.puppet.com/mcollective/reference/basic/basic_cli_usage.html#complex-compound-or-select-queries)
+
+#### mcollectiveClass
+
+A list of class consiting of either `class=value` or a [compound value](https://docs.puppet.com/mcollective/reference/basic/basic_cli_usage.html#complex-compound-or-select-queries)
+
+#### mcollectiveAgent
+
+The mcollective agent for which this entry is applying. There can only be one of this value per entry.
+
+#### mcollectiveHost
+
+A list of IP address (`10.0.0.20`) or of IP mask (`10.0.0.0/8`).
+
+#### mcollectiveOrder
+
+The order this entry is weight. The higher the value of order is, the more weight it has. The highest order entry is chosen for the applied policy.
 
 ### Samples
 
