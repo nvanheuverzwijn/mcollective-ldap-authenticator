@@ -71,3 +71,7 @@ plugin.ldapactionpolicy.port=389
 plugin.ldapactionpolicy.username=cn=admin,dc=example,dc=com
 plugin.ldapactionpolicy.password=asdF1234
 ```
+
+## Tests
+
+This project only have integration test. It can be fired using `make test`. All of those test are under the `tests` folder in the `ldap.sh` file. This file is run on the VM machine started with vagrant. It is pretty slow and needs refactor into ruby spec unit. Maybe even skip the `mco` call and use directly the ruby object for speeds.
