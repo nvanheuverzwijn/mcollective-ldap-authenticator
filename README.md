@@ -4,11 +4,11 @@ This is an attempt to implement the [mcollective action policy project](https://
 
 ## Install
 
-Install everything you need for building the development box
+Install everything you need for building the development box.
 ```
-$ make build
+$ make
 $ cd vagrant-files
-$ vagrant up
+$ vagrant ssh
 ```
 
 ## LDAP
