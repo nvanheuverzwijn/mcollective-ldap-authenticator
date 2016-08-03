@@ -6,6 +6,7 @@ help:
 	@echo "       make ldap"
 	@echo "       make test"
 	@echo "       make vagrant"
+	@echo "       make deb"
 
 build:
 	./bin/make_script/make_build.sh
@@ -21,3 +22,6 @@ test:
 
 vagrant:
 	./bin/make_script/make_vagrant.sh
+
+deb: ldap
+	./bin/make_script/make_deb.sh
