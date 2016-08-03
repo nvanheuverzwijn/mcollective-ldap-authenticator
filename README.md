@@ -2,7 +2,32 @@
 
 This is an attempt to implement the [mcollective action policy project](https://github.com/puppetlabs/mcollective-actionpolicy-auth) to an ldap backend.
 
-## Install
+## Installation
+
+### Debian
+
+For debian, first generate the debian package. Install it with `dpkg -i`. 
+
+Install the ldap schema found in `/usr/share/doc/mcollective-ldap-action-policy/action-policy.schema`. I suggest [this tool](https://gist.github.com/jaseg/8577024) or use `puppet` to do it. There is an example with puppet in [this repository](https://github.com/nvanheuverzwijn/mcollective-ldap-authenticator/blob/master/puppet-files/manifests/default.pp#L17). 
+
+Modify your `/etc/mcollective/server.cfg` and add those lines :
+
+```
+rpcauthorization = 1
+rpcauthprovider = ldap_action_policy
+```
+
+Also add the [specific ldap-action-policy configuration](#plugin-configuration) in `/etc/mcollective/server.cfg`.
+
+Insert your policy in your ldap server.
+
+## Packaging
+
+### Debian
+
+Debian package can be generated with `make deb`. Resulting package will appear in `package/` folder.
+
+## Development install
 
 Install everything you need for building the development box.
 ```
@@ -59,7 +84,7 @@ A sample ldif file containing data for the mcollective schema is in `ldap.schema
 
 ## Clean
 
-To clean the environment, `make clean`.
+To clean the environment, `make clean`. This delete all gem files installed via bundle and remove puppet librarian modules.
 
 ## Plugin configuration
 
